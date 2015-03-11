@@ -7,8 +7,7 @@
 #include "boost/thread.hpp"
 #include <sophus/se3.hpp>
 #include <ceres/ceres.h>
-#include <Mvlpp/SE3.h>
-#include "EigenCeresJetNumTraits.h"
+#include "Utils/SE3.h"
 #include "LocalParamSe3.h"
 #include "Utils.h"
 

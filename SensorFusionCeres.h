@@ -3,11 +3,10 @@
 #include <stdio.h>
 #include "Eigen/Eigen"
 #include "Eigen/Sparse"
+#include "Utils/SE3.h"
 #include "boost/thread.hpp"
 #include <sophus/se3.hpp>
 #include <ceres/ceres.h>
-#include <Mvlpp/SE3.h>
-#include "EigenCeresJetNumTraits.h"
 #include "LocalParamSe3.h"
 #include "Utils.h"
 #include "CVars/CVar.h"
