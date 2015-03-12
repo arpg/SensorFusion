@@ -13,7 +13,6 @@ set(BOOST_LIBS thread date_time system timer)
 find_package( CeresSolver REQUIRED)
 find_package(Sophus REQUIRED)
 find_package( Eigen3 REQUIRED )
-find_package( MVL REQUIRED )
 find_package( CVARS REQUIRED )
 find_package( Boost COMPONENTS ${BOOST_LIBS} REQUIRED)
 
@@ -21,7 +20,7 @@ find_package( Boost COMPONENTS ${BOOST_LIBS} REQUIRED)
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
 #SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp")
 
-set( _LIBRARIES ${MVL_LIBRARIES}
+set( _LIBRARIES 
                 ${BULLET_LIBRARIES}
                 ${CeresSolver_LIBRARIES}
                 ${BOOST_LIBRARIES}
@@ -33,7 +32,6 @@ set( _INCLUDE_DIRS
         ${CeresSolver_INCLUDE_DIRS}
         ${CMAKE_BINARY_DIR}
         ${EIGEN3_INCLUDE_DIR}
-        ${MVL_INCLUDE_DIRS}
         ${CVARS_INCLUDE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/..
