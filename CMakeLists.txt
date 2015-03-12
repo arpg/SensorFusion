@@ -1,29 +1,29 @@
-project( SensorFusion ) 
-cmake_minimum_required(VERSION 2.8) 
+project( SensorFusion )
+cmake_minimum_required(VERSION 2.8)
 
 #OPTION(BUILD_EXAMPLES "Build Examples" ON)
 
 
-# Add to module path, so we can find our cmake modules 
+# Add to module path, so we can find our cmake modules
 set( CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules ${CMAKE_MODULE_PATH} )
 
 #the boost libraries that we need
-set(BOOST_LIBS thread date_time system timer)
+#set(BOOST_LIBS thread date_time system timer)
 
 find_package( CeresSolver REQUIRED)
 find_package(Sophus REQUIRED)
 find_package( Eigen3 REQUIRED )
 find_package( CVARS REQUIRED )
-find_package( Boost COMPONENTS ${BOOST_LIBS} REQUIRED)
+#find_package( Boost COMPONENTS ${BOOST_LIBS} REQUIRED)
 
-#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11  -Wall")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11  -Wall")
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
 #SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp")
 
 set( _LIBRARIES 
                 ${BULLET_LIBRARIES}
                 ${CeresSolver_LIBRARIES}
-                ${BOOST_LIBRARIES}
+                #                ${BOOST_LIBRARIES}
                 ${VRPN_LIBRARY}
 #                ${Sophus_LIBRARIES}  )
                 )
@@ -42,7 +42,7 @@ link_directories(${Sophus_LIBRARY_DIRS})
 # expose these for third parties
 set( SENSORFUSION_INCLUDE_DIRS ${_INCLUDE_DIRS}  CACHE INTERNAL "" FORCE )
 set( SENSORFUSION_LIBRARIES  ${_LIBRARIES} CACHE INTERNAL "" FORCE )
-                           
+
 include_directories( ${SENSORFUSION_INCLUDE_DIRS} )
 
 set( SRCS
@@ -74,7 +74,7 @@ target_link_libraries( SensorFusion ${SENSORFUSION_LIBRARIES} )
 
 get_target_property( _LIBRARY SensorFusion LOCATION )
 list( INSERT SENSORFUSION_LIBRARIES 0 ${_LIBRARY} )
- 
+
 # Create the *Config.cmake file for the build tree.
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/SensorFusionConfig.cmake.in
             ${CMAKE_CURRENT_BINARY_DIR}/SensorFusionConfig.cmake @ONLY IMMEDIATE )
