@@ -1,18 +1,18 @@
 #ifndef SensorFusionCeres_H
 #define SensorFusionCeres_H
 #include <stdio.h>
-#include "Eigen/Eigen"
-#include "Eigen/Sparse"
-#include "SE3.h"
-#include "boost/thread.hpp"
 #include <sophus/se3.hpp>
 #include <ceres/ceres.h>
-#include <SE3.h>
+#include <math.h>
+#include <thread>
+#include <Eigen/Eigen>
+#include <Eigen/Sparse>
+
+#include "SE3.h"
 #include "LocalParamSe3.h"
 #include "Utils.h"
 #include "CVars/CVar.h"
 #include "float.h"
-#include <math.h>
 
 
 
@@ -196,7 +196,7 @@ namespace fusion
         bool m_bCanAddImu;
         bool m_bFirstPose;
 
-        boost::mutex m_ImuLock;
+        std::mutex m_ImuLock;
         Eigen::IOFormat m_EigenFormat;
 
         double m_dStartTime;
@@ -211,5 +211,5 @@ namespace fusion
 
 
 
-}
+} // end namespace fusion
 #endif // SensorFusionCeres_H

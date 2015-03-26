@@ -42,7 +42,7 @@ void SensorFusionCeres::RegisterImuPose(double accelX, double accelY, double acc
         data.m_dTime = correctedTime;
 
 
-        boost::mutex::scoped_lock lock(m_ImuLock);
+        std::unique_lock<std::mutex> lock(m_ImuLock, std::try_to_lock);
         if(m_bCanAddImu){
             dout("Integrating forward from " << m_lImuData.back().m_dTime-m_dStartTime << " to " << data.m_dTime-m_dStartTime << " with dt " << data.m_dTime-m_lImuData.back().m_dTime);
             _RegisterImuPoseInternal(data);
@@ -106,7 +106,7 @@ void SensorFusionCeres::RegisterGlobalPose(const Sophus::SE3d& dT_wc,
 
     //make sure no more imu poses are added after this point
     {
-        boost::mutex::scoped_lock lock(m_ImuLock);
+        std::unique_lock<std::mutex> lock(m_ImuLock, std::try_to_lock);
         m_bCanAddImu = false;
     }
 
@@ -130,7 +130,7 @@ void SensorFusionCeres::RegisterGlobalPose(const Sophus::SE3d& dT_wc,
         double correctedTime = viconTime + m_dGlobalTimeOffset;
         //finds the first pose based on the filter size
         while((int)m_lParams.size() >= m_nFilterSize+1){
-            boost::mutex::scoped_lock lock(m_ImuLock);
+            std::unique_lock<std::mutex> lock(m_ImuLock, std::try_to_lock);
             std::list<ImuData>::iterator it = m_lImuData.begin();
             std::list<ImuData>::iterator prev = it;
             //find the first IMU datapoint (interpolate if necessary)
@@ -157,7 +157,7 @@ void SensorFusionCeres::RegisterGlobalPose(const Sophus::SE3d& dT_wc,
         {
             //integrate the previous IMU measurement up to this time
             {
-                boost::mutex::scoped_lock lock(m_ImuLock);
+                std::unique_lock<std::mutex> lock(m_ImuLock, std::try_to_lock);
                 if(m_lImuData.size() > 0){
                     ImuData imuData = m_lImuData.back();
                     imuData.m_dTime = data.m_dTime;
@@ -221,7 +221,7 @@ void SensorFusionCeres::RegisterGlobalPose(const Sophus::SE3d& dT_wc,
 
     //re enable imu integration
     {
-        boost::mutex::scoped_lock lock(m_ImuLock);
+        std::unique_lock<std::mutex> lock(m_ImuLock, std::try_to_lock);
         //go through the queue and integrate all leftover itmes
         for( std::list<ImuData>::iterator iter = m_lImuQueue.begin() ; iter != m_lImuQueue.end() ; iter++ ){
             //if((*iter).m_dTime > m_CurrentPose.m_dTime){
@@ -236,7 +236,7 @@ void SensorFusionCeres::RegisterGlobalPose(const Sophus::SE3d& dT_wc,
 
 void SensorFusionCeres::ResetCurrentPose(const Sophus::SE3d& pose, const Eigen::Vector3d& initV, const Eigen::Vector2d& initG)
 {
-    boost::mutex::scoped_lock lock(m_ImuLock);
+    std::unique_lock<std::mutex> lock(m_ImuLock, std::try_to_lock);
     m_CurrentPose.m_dPose = pose;
     m_CurrentPose.m_dV = initV;
     m_dG = initG;
@@ -420,7 +420,7 @@ void SensorFusionCeres::SetCalibrationPose(const Sophus::SE3d& dTic)
 /////////////////////////////////////////////////////////////////////////////////////////
 PoseParameter SensorFusionCeres::GetCurrentPose()
 {
-    boost::mutex::scoped_lock lock(m_ImuLock);
+    std::unique_lock<std::mutex> lock(m_ImuLock, std::try_to_lock);
     PoseParameter param = m_CurrentPose;
     param.m_dPose = param.m_dPose*m_dTim;
     return param;
@@ -429,7 +429,7 @@ PoseParameter SensorFusionCeres::GetCurrentPose()
 /////////////////////////////////////////////////////////////////////////////////////////
 PoseParameter SensorFusionCeres::_IntegrateImu(const PoseParameter& startingPose, double tStart, double tEnd, Eigen::Vector3d g, std::vector<Sophus::SE3d>* posesOut /*= NULL*/)
 {
-    boost::mutex::scoped_lock lock(m_ImuLock);
+    std::unique_lock<std::mutex> lock(m_ImuLock, std::try_to_lock);
     PoseParameter startPose = startingPose;
     //go through the IMU values and integrate along
     std::list<ImuData>::iterator it = m_lImuData.begin();
@@ -647,7 +647,7 @@ PoseParameterBase<T> SensorFusionCeres::_IntegrateImuOneStepBase(const PoseParam
 {
     //construct the state matrix
     Eigen::Matrix<T,9,1> dState;
-    dState.head(6) = mvl::T2Cart(currentPose.m_dPose.matrix());
+    dState.head(6) = fusion::T2Cart(currentPose.m_dPose.matrix());
     dState.tail(3) = currentPose.m_dV;
     T h = zEnd.m_dTime - zStart.m_dTime;
     if(h == (T)0){

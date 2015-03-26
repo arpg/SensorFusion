@@ -6,8 +6,6 @@
  *  $Id$
  */
 
-#ifndef _MVLPP_SE3_H_
-#define _MVLPP_SE3_H_
 
 #include <math.h>
 #include <Eigen/Core>
@@ -17,18 +15,18 @@ namespace Eigen
     typedef Matrix<double,6,1> Vector6d;
 }
 
-namespace mvl
+namespace fusion
 {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    inline void FillRotationMatrixFixedFrameXYZ( 
-            Eigen::Matrix3d& R, 
-            const double& r, 
+    inline void FillRotationMatrixFixedFrameXYZ(
+            Eigen::Matrix3d& R,
+            const double& r,
             const double& p,
-            const double& q 
+            const double& q
             )
     {
-        // psi = roll, th = pitch, phi = yaw 
+        // psi = roll, th = pitch, phi = yaw
         double cq, cp, cr, sq, sp, sr;
         cr = cos( r );
         cp = cos( p );
@@ -49,7 +47,7 @@ namespace mvl
         R(2,0) = -sp;
         R(2,1) = sr*cp;
         R(2,2) = cr*cp;
-    } 
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     inline void FillRotationMatrixFixedFrameXYZ(
@@ -284,5 +282,3 @@ namespace mvl
     }
 
 }
-
-#endif
