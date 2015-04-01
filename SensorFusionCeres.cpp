@@ -678,4 +678,4 @@ PoseParameterBase<T> SensorFusionCeres::_IntegrateImuOneStepBase(const PoseParam
     return output;
 }
 
-}
+} //end namespace fusion

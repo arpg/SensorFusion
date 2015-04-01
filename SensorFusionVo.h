@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include "Eigen/Eigen"
 #include "Eigen/Sparse"
-#include "boost/thread.hpp"
 #include <sophus/se3.hpp>
+#include <thread>
 #include <ceres/ceres.h>
 #include <SE3.h>
 #include "LocalParamSe3.h"
