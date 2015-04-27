@@ -11,28 +11,28 @@ set( CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules ${CMAKE_MODULE_
 #set(BOOST_LIBS thread date_time system timer)
 
 find_package( CeresSolver REQUIRED)
-find_package(Sophus REQUIRED)
+find_package( Sophus REQUIRED)
 find_package( Eigen3 REQUIRED )
-find_package( CVARS REQUIRED )
+find_package( CVars REQUIRED )
 #find_package( Boost COMPONENTS ${BOOST_LIBS} REQUIRED)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11  -Wall")
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
 #SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp")
 
-set( _LIBRARIES 
+set( _LIBRARIES
                 ${BULLET_LIBRARIES}
                 ${CeresSolver_LIBRARIES}
                 #                ${BOOST_LIBRARIES}
                 ${VRPN_LIBRARY}
-#                ${Sophus_LIBRARIES}  )
-                )
+                ${CVars_LIBRARIES}  )
+
 set( _INCLUDE_DIRS
-        ${Sophus_INCLUDE_DIR}
-        ${CeresSolver_INCLUDE_DIRS}
+    ${Sophus_INCLUDE_DIRS}
+    ${CeresSolver_INCLUDE_DIRS}
         ${CMAKE_BINARY_DIR}
         ${EIGEN3_INCLUDE_DIR}
-        ${CVARS_INCLUDE_DIR}
+        ${CVars_INCLUDE_DIRS}
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/..
         )
