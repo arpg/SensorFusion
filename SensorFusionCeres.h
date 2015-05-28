@@ -130,11 +130,11 @@ namespace fusion
         SensorFusionCeres(const int nFilterSize);
         void RegisterImuPose(double accelX, double accelY, double accelZ, double gyroX, double gyroY, double gyroZ,  double imuTime, double time);
         void RegisterGlobalPose(const Sophus::SE3d& dGlobalPose,
-                                const double& viconTime,
+                                const double& localizerTime,
                                 const double& time);
         void RegisterGlobalPose(const Sophus::SE3d& dT_wc,
                                 const PoseData& relativePose,
-                                const double& viconTime,
+                                const double& localizerTime,
                                 const double& time,
                                 const bool& bHastGlobalPose,
                                 const bool& bHasRelativePose);
@@ -187,7 +187,7 @@ namespace fusion
         int m_nFilterSize;
         int m_nInterationNum;
 
-        //time offset parameters for vicon and imu
+        //time offset parameters for localizer and imu
         double m_dRMSE;
         double m_dImuTimeOffset;
         double m_dGlobalTimeOffset;

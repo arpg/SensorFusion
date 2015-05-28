@@ -85,23 +85,23 @@ void SensorFusionCeres::_RegisterImuPoseInternal(const ImuData& data)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 void SensorFusionCeres::RegisterGlobalPose(const Sophus::SE3d& dGlobalPose,
-                                           const double& viconTime,
+                                           const double& localizerTime,
                                            const double& time)
 {
-    RegisterGlobalPose(dGlobalPose,PoseData(),viconTime,time, true,false);
+    RegisterGlobalPose(dGlobalPose,PoseData(),localizerTime,time, true,false);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 void SensorFusionCeres::RegisterGlobalPose(const Sophus::SE3d& dT_wc,
                                            const PoseData& relativePose,
-                                           const double& viconTime,
+                                           const double& localizerTime,
                                            const double& time,
                                            const bool& bHastGlobalPose,
                                            const bool& bHasRelativePose)
 {
     m_bFirstPose = false;
     PoseData data;
-    data.m_dSensorTime = viconTime;
+    data.m_dSensorTime = localizerTime;
     data.m_dPose = dT_wc;
 
     //make sure no more imu poses are added after this point
@@ -127,7 +127,7 @@ void SensorFusionCeres::RegisterGlobalPose(const Sophus::SE3d& dT_wc,
             m_CurrentPose.m_dW.setZero();
         }
     }else{
-        double correctedTime = viconTime + m_dGlobalTimeOffset;
+        double correctedTime = localizerTime + m_dGlobalTimeOffset;
         //finds the first pose based on the filter size
         while((int)m_lParams.size() >= m_nFilterSize+1){
             std::unique_lock<std::mutex> lock(m_ImuLock, std::try_to_lock);
@@ -161,7 +161,7 @@ void SensorFusionCeres::RegisterGlobalPose(const Sophus::SE3d& dT_wc,
                 if(m_lImuData.size() > 0){
                     ImuData imuData = m_lImuData.back();
                     imuData.m_dTime = data.m_dTime;
-                    dout("Integrating forward to match vicon from " << m_lImuData.back().m_dTime-m_dStartTime << " to " << data.m_dTime-m_dStartTime << " with dt " << data.m_dTime-m_lImuData.back().m_dTime );
+                    dout("Integrating forward to match localizer from " << m_lImuData.back().m_dTime-m_dStartTime << " to " << data.m_dTime-m_dStartTime << " with dt " << data.m_dTime-m_lImuData.back().m_dTime );
                     _RegisterImuPoseInternal(imuData);
 
                 }
