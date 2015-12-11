@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  *  \file SE3.h
  *
@@ -5,7 +7,6 @@
  *
  *  $Id$
  */
-
 
 #include <math.h>
 #include <Eigen/Core>
