@@ -1,6 +1,6 @@
-#include "SensorFusionCeres.h"
-#include "Utils.h"
-#include "CostFunctions.h"
+#include <SensorFusion/SensorFusionCeres.h>
+#include <SensorFusion/Utils.h>
+#include <SensorFusion/CostFunctions.h>
 
 static double& g_dImuCauchyNorm = CVarUtils::CreateGetUnsavedCVar("debug.ImuCauchyNorm",0.2);
 static double& g_dGlobalCauchyNorm = CVarUtils::CreateGetUnsavedCVar("debug.GlobalCauchyNorm",0.01);

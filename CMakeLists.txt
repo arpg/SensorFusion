@@ -1,11 +1,12 @@
 project( SensorFusion )
 cmake_minimum_required(VERSION 2.8)
 
-#OPTION(BUILD_EXAMPLES "Build Examples" ON)
-
-
 # Add to module path, so we can find our cmake modules
 set( CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules ${CMAKE_MODULE_PATH} )
+
+STRING( TOLOWER ${PROJECT_NAME} LIBRARY_NAME )
+
+include(install_package)
 
 #the boost libraries that we need
 #set(BOOST_LIBS thread date_time system timer)
@@ -33,52 +34,46 @@ set( _INCLUDE_DIRS
         ${CMAKE_BINARY_DIR}
         ${EIGEN3_INCLUDE_DIR}
         ${CVars_INCLUDE_DIRS}
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/..
         )
 
-link_directories(${Sophus_LIBRARY_DIRS})
-
 # expose these for third parties
-set( SENSORFUSION_INCLUDE_DIRS ${_INCLUDE_DIRS}  CACHE INTERNAL "" FORCE )
-set( SENSORFUSION_LIBRARIES  ${_LIBRARIES} CACHE INTERNAL "" FORCE )
+set( SensorFusion_INCLUDE_DIRS ${_INCLUDE_DIRS}  CACHE INTERNAL "" FORCE )
+set( SensorFusion_LIBRARIES  ${_LIBRARIES} CACHE INTERNAL "" FORCE )
 
-include_directories( ${SENSORFUSION_INCLUDE_DIRS} )
+include_directories( ${SensorFusion_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include )
 
 set( SRCS
         SensorFusionCeres.cpp
         SensorFusionVo.cpp
    )
 
+set( HDR_PREFIX "include/${PROJECT_NAME}" )
 set( HDRS
-        CostFunctions.h
-        SensorFusionCeres.h
-        SensorFusionVo.h
+    ${HDR_PREFIX}/CostFunctions.h
+        ${HDR_PREFIX}/SensorFusionCeres.h
+        ${HDR_PREFIX}/SensorFusionVo.h
    )
 
 
-add_library( SensorFusion ${SRCS} ${HDRS} )
-target_link_libraries( SensorFusion ${SENSORFUSION_LIBRARIES} )
+add_library( sensorfusion SHARED ${SRCS} ${HDRS} )
+target_link_libraries( sensorfusion ${SensorFusion_LIBRARIES} )
 
-#IF(BUILD_EXAMPLES)
-#    FIND_PACKAGE(SceneGraph REQUIRED)
-#    INCLUDE_DIRECTORIES(${SceneGraph_INCLUDE_DIRS})
+install_package(
+    PKG_NAME ${PROJECT_NAME}
+    LIB_NAME ${LIBRARY_NAME}
+    VERSION 2.1
+    DESCRIPTION "Simple sensor fusion library for IMU and process model."
+    INSTALL_INCLUDE_DIR true
+    INSTALL_GENERATED_HEADERS ${GENERATED_HEADERS}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
+    INCLUDE_DIRS ${SensorFusion_INCLUDE_DIRS}
+    LINK_LIBS ${SensorFusion_LIBRARIES}
+    )
 
-#    FIND_PACKAGE(Pangolin REQUIRED)
-#    INCLUDE_DIRECTORIES(${Pangolin_INCLUDE_DIRS})
-#    LINK_DIRECTORIES(${Pangolin_LIBRARY_DIRS})
+###########################
 
-#    add_executable( FusionTest FusionTest.cpp )
-#    target_link_libraries( FusionTest ${SENSORFUSION_LIBRARIES} ${SceneGraph_LIBRARIES} ${Pangolin_LIBRARIES} SensorFusion )
-#ENDIF()
+include(${CMAKE_MODULE_PATH}/cmake_uninstall.cmake.in)
 
-get_target_property( _LIBRARY SensorFusion LOCATION )
-list( INSERT SENSORFUSION_LIBRARIES 0 ${_LIBRARY} )
-
-# Create the *Config.cmake file for the build tree.
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/SensorFusionConfig.cmake.in
-            ${CMAKE_CURRENT_BINARY_DIR}/SensorFusionConfig.cmake @ONLY IMMEDIATE )
-
-# Add module to CMake package registery.
-export( PACKAGE SensorFusion )
-
+add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+###########################
