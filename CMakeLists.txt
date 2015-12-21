@@ -15,6 +15,7 @@ find_package( CeresSolver REQUIRED)
 find_package( Sophus REQUIRED)
 find_package( Eigen3 REQUIRED )
 find_package( CVars REQUIRED )
+find_package( CarPlanner REQUIRED )
 #find_package( Boost COMPONENTS ${BOOST_LIBS} REQUIRED)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11  -Wall")
@@ -26,7 +27,8 @@ set( _LIBRARIES
                 ${CeresSolver_LIBRARIES}
                 #                ${BOOST_LIBRARIES}
                 ${VRPN_LIBRARY}
-                ${CVars_LIBRARIES}  )
+                ${CVars_LIBRARIES}
+                ${CarPlanner_LIBRARIES} )
 
 set( _INCLUDE_DIRS
     ${Sophus_INCLUDE_DIRS}
@@ -34,6 +36,7 @@ set( _INCLUDE_DIRS
         ${CMAKE_BINARY_DIR}
         ${EIGEN3_INCLUDE_DIR}
         ${CVars_INCLUDE_DIRS}
+        ${CarPlanner_INCLUDE_DIRS}
         )
 
 # expose these for third parties

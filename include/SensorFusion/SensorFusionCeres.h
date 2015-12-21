@@ -8,7 +8,7 @@
 #include <Eigen/Eigen>
 #include <Eigen/Sparse>
 
-#include "SE3.h"
+#include <CarPlanner/SE3.h>
 #include "LocalParamSe3.h"
 #include "Utils.h"
 #include <CVars/CVar.h>
